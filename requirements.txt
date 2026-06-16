@@ -1,2 +1,6 @@
 numpy>=1.24
 torch>=2.0
+
+# For the visualizers (watch.py and `train.py --plot`)
+pygame>=2.5
+matplotlib>=3.7
