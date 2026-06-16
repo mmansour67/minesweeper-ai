@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Trained models and logs (regenerate by running train.py)
+*.pt
+training_log.csv
+
+# OS / editor cruft
+.DS_Store
+.idea/
+.vscode/
