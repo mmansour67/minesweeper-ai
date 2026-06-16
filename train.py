@@ -8,6 +8,7 @@ rate is the whole point of the project.
 Run it like:
     python train.py                       # default 6x6 board, 6 mines
     python train.py --rows 9 --cols 9 --mines 10 --episodes 50000
+    python train.py --plot                # also show a live win-rate chart
 
 What it produces:
     * console output every N games showing the recent win rate
@@ -43,9 +44,26 @@ def main():
     parser.add_argument("--batch", type=int, default=256,
                         help="replay batch size (smaller = faster per step on CPU)")
     parser.add_argument("--report-every", type=int, default=500)
+    parser.add_argument("--plot", action="store_true",
+                        help="show a live matplotlib chart of the win rate while training")
     parser.add_argument("--model-out", type=str, default="minesweeper_dqn.pt")
     parser.add_argument("--log-out", type=str, default="training_log.csv")
     args = parser.parse_args()
+
+    # Optional live win-rate chart. We only import matplotlib if it's requested,
+    # so the core trainer has no extra dependency.
+    live = None
+    if args.plot:
+        import matplotlib.pyplot as plt
+        plt.ion()
+        fig, ax = plt.subplots()
+        (line,) = ax.plot([], [], marker="o")
+        ax.set_xlabel("episode")
+        ax.set_ylabel("win rate (%)")
+        ax.set_title(f"Learning to play {args.rows}x{args.cols} Minesweeper")
+        ax.set_ylim(0, 100)
+        ax.grid(True, alpha=0.3)
+        live = (plt, fig, ax, line, [], [])
 
     env = Minesweeper(rows=args.rows, cols=args.cols, n_mines=args.mines)
     agent = DQNAgent(rows=args.rows, cols=args.cols, batch_size=args.batch)
@@ -101,6 +119,16 @@ def main():
             )
             log_rows.append([episode, win_rate, avg_reward, epsilon])
 
+            # Update the live chart, if enabled.
+            if live is not None:
+                plt, fig, ax, line, xs, ys = live
+                xs.append(episode)
+                ys.append(win_rate)
+                line.set_data(xs, ys)
+                ax.set_xlim(0, max(xs) * 1.05 + 1)
+                fig.canvas.draw_idle()
+                plt.pause(0.001)
+
     agent.save(args.model_out)
     with open(args.log_out, "w", newline="") as f:
         writer = csv.writer(f)
@@ -108,6 +136,12 @@ def main():
         writer.writerows(log_rows)
 
     print(f"\nDone. Model saved to {args.model_out}, log saved to {args.log_out}.")
+
+    # Keep the final chart on screen until the user closes the window.
+    if live is not None:
+        plt, fig, ax, line, xs, ys = live
+        plt.ioff()
+        plt.show()
 
 
 if __name__ == "__main__":
