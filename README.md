@@ -171,34 +171,8 @@ and how often the target network syncs.
 
 ---
 
-## 7. Talking about this on your resume
 
-A concise, accurate way to describe it:
-
-> *Built a reinforcement-learning agent that learns to play Minesweeper from
-> scratch. Implemented a custom game environment with a Gym-style interface and a
-> Deep Q-Network using a convolutional neural net (PyTorch), with experience
-> replay, a target network, epsilon-greedy exploration, and action masking. The
-> agent's win rate improves over training and approaches the theoretical ceiling
-> set by Minesweeper's irreducible guessing.*
-
-Interviewers love a candidate who knows the *limits* of their result, so be ready
-to explain why 100% is impossible — that's covered in section 4.
-
-### Honest framing note
-
-You chose Minesweeper, and this is a legitimate and interesting RL project. Just
-know that in interviews some people will point out that Minesweeper is often
-attacked with logic/probability solvers rather than RL. That's a feature, not a
-bug, for you: it gives you a great answer ("I used RL specifically to see how close
-a learning agent could get without hand-coded rules, and here's where its ceiling
-is and why"). If you ever want a project where RL shines more dramatically with a
-near-vertical learning curve, **Snake** is the classic companion piece and reuses
-almost all of this same code structure.
-
----
-
-## 8. Next steps / extensions (good portfolio bonuses)
+## 7. Next steps / extensions (good portfolio bonuses)
 
 - Plot the learning curve and add it to your README.
 - Add a simple GUI (e.g. `pygame` or `tkinter`) so you can play against / alongside
